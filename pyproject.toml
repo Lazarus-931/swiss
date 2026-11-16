@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swiss"
+version = "0.1.0"
+description = "Experimental inference engine running on Carbon"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2", "carbon-metal"]
+
+[project.optional-dependencies]
+models = ["safetensors", "transformers>=5", "jinja2"]
+test = [
+    "pytest",
+    "ruff>=0.17,<0.18",
+    "torch",
+    "transformers==5.23.0",
+    "safetensors",
+]
+
+[project.scripts]
+swiss = "swiss.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["swiss*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+markers = ["tiny: random-weight models on the GPU"]
+addopts = "-m 'not tiny'"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["swiss", "tests"]
+
+[tool.ruff.lint]
+select = ["E501", "F", "I"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
